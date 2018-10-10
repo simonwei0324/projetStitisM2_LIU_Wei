@@ -135,6 +135,17 @@ public class Hospitalisation {
 	public void setListsDiagnostics(ArrayList<Diagnostic> listsDiagnostics) {
 		this.listsDiagnostics = listsDiagnostics;
 	}
+
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Hospitalisation \n NumHospitalisation=" + NumHospitalisation + ", NumPatient=" + NumPatient
+				+ ", DateEntree=" + DateEntree + ", DateSortie=" + DateSortie + "";
+	}
 	
 
 	

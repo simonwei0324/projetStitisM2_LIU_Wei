@@ -13,7 +13,6 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import stitis.m2liuwei.Acte;
 
 /**
  * @author weiliu
@@ -32,6 +31,7 @@ public class ActeAction {
     static int choix;
 	
 	static	int ligneActeDonnees=0;
+	
 	public static void NombreActePatient() {
 		ActeAction acte_action =new ActeAction();
     	System.out.println("Entrer numpatient Par exemple(NumPatient=100130)");
@@ -54,16 +54,17 @@ public class ActeAction {
     		}
             error=true;
         } else {
-        	List<Acte> ListeActes=acte_action.nombre_acte(numpatient) ;
+        	List<String> InfoActes=acte_action.nombre_acte(numpatient) ;
         	 
-        	    for (Acte acte : ListeActes)
+        	    for (String acte : InfoActes)
         	         {
-        	    		System.out.println("NumActe"+" DateActe\n" );
-        	             System.out.println(acte.getNumActe()+" "+acte.getDateActe()+"\n");
+        	    	System.out.println(" ");
+        	    		System.out.println("CodeCCAM"+" LibelleCCAM\n" );
+        	             System.out.println(acte);
                  }
         	    
         	    System.out.println("");
-        	    System.out.println(patient+"\n nombre_acte: " +ListeActes.size());
+        	    System.out.println(patient+"\n nombre_acte: " +InfoActes.size());
         	    break;
         }
     		}catch(InputMismatchException e) {
@@ -77,46 +78,45 @@ public class ActeAction {
 	}
 	
 	
-	public  List<Acte> nombre_acte(int numpatient ) {
+	public  List<String> nombre_acte(int numpatient ) {
 
-    	HospitalisationAction hospAction= new HospitalisationAction();
-    	Hospitalisation patientHosp=hospAction.queryById(numpatient);
-    	 return queryById(patientHosp);
+  
+    	 ActeAction acte_action =new ActeAction();
+    	 return acte_action.queryById(numpatient);
     	
     	
 	}
 	
 
-	   //chercher un hospitalisation par numpatient
-    public List<Acte> queryById(Hospitalisation hosp)
+	   //chercher un CCAM ET LIBELLECCAM par numpatient
+    public List<String> queryById(int numpatient )
          {
              
    
             Connection conn = null;
             PreparedStatement ptmt = null;
             ResultSet rs = null;
-            List<Acte> listeActes= new ArrayList<Acte>();// met try
+            List<String> InfoActes= new ArrayList<String>();// met try
+            
             
             try
             {
                 conn = DBConnection.getConnection();
     
-                String sql = "" + " select distinct NumActe,DateActe from tab_hospitalisation inner join tab_acte on NumHospitalisation= tab_hospitalisation.NumHospitalisation " + " where  NumPatient=? and DateActe between DateEntree and DateSortie ";
-    
+
+                String sql="select tab_acte.CodeCCAM,ths_ccam.LibelleCCAM from ths_ccam,tab_hospitalisation,tab_acte where NumPatient=? and tab_hospitalisation.NumHospitalisation=tab_acte.NumHopitalisation and tab_acte.CodeCCAM=ths_ccam.CodeCCAM ";
                 ptmt = conn.prepareStatement(sql);
     
-                ptmt.setInt(1, hosp.getNumPatient());
+                ptmt.setInt(1, numpatient );
     
                 rs = ptmt.executeQuery();
                 
                 while (rs.next())
                 {
-                	Acte acte=new Acte();
-                	ligneActeDonnees++;
-                	acte.setNumActe(rs.getInt("NumActe"));
-                	//acte.setNumHospitalisation(rs.getInt("NumHospitalisation"));
-                	acte.setDateActe(rs.getTimestamp("DateActe"));
-                	listeActes.add(acte);
+                	
+                	String infoActe=rs.getString("CodeCCAM")+" | "+rs.getString("LibelleCCAM");
+                	
+                	InfoActes.add(infoActe);
                 	
 
                 }
@@ -145,7 +145,7 @@ public class ActeAction {
             }
     
           
-			return  listeActes;
+			return  InfoActes;
         }
 	
 

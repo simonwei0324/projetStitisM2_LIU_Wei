@@ -15,38 +15,39 @@ import java.util.*;
  */
 public class HospitalisationAction {
 	
-	 
-	public long SejourPatient(Hospitalisation patientHosp) {
-			long sejourpatient;
-			Date datesortie=patientHosp.getDateSortie();
-			Date dateinput=patientHosp.getDateEntree();
-			sejourpatient=datesortie.getTime()-dateinput.getTime();
+	 //sejour du patient
+	public int SejourPatient(Integer NumPatient) {
 		
-		return sejourpatient;
+		HospitalisationAction hospAction= new HospitalisationAction();
+		
+		return hospAction.queryById(NumPatient).size();
 		
 		
 		
 	}
 	
-    //chercher un hospitalisation par numpatient
-    public Hospitalisation queryById(Integer NumPatient)
+    //chercher une list hospitalisation par numpatient
+    public List<Hospitalisation>  queryById(Integer NumPatient)
          {
     		 
              Hospitalisation Patient_hosp = null;
+             List<Hospitalisation> listeHospitalisations= new ArrayList<Hospitalisation>();
    
             Connection conn = null;
             PreparedStatement ptmt = null;
             ResultSet rs = null;
+            
     
             try
             {
                 conn = DBConnection.getConnection();
     
-                String sql = "" + " select * from tab_hospitalisation " + " where NumPatient=? ";
+                String sql = "" + " select * from tab_hospitalisation " + " where NumPatient= ?  ";
     
                 ptmt = conn.prepareStatement(sql);
     
                 ptmt.setInt(1, NumPatient);
+                
     
                 rs = ptmt.executeQuery();
     
@@ -58,7 +59,7 @@ public class HospitalisationAction {
                 	Patient_hosp.setDateEntree(rs.getDate("DateEntree"));
                 	Patient_hosp.setDateSortie(rs.getDate("DateSortie"));
                 	
-                	
+                	listeHospitalisations.add(Patient_hosp);
 
                 }
             }
@@ -85,7 +86,7 @@ public class HospitalisationAction {
                 }
             }
     
-            return  Patient_hosp;
+            return listeHospitalisations ;
         }
 	
 }

@@ -34,9 +34,10 @@ public class PatientAction {
     	 numpatient=in.nextInt();
     	 
     	HospitalisationAction hospAction= new HospitalisationAction();
-    	Hospitalisation patientHosp=hospAction.queryById(numpatient);
-    	
-    	if(patientHosp==null) {
+    	//int Sejour_Patient= hospAction.SejourPatient(numpatient);
+    	PatientDaoImp patientdao=new PatientDaoImp();
+    	Patient patient=patientdao.queryById(numpatient);
+    	if(patient==null) {
     		System.out.println("Ce patient n'exsite pas , entrez un chiffre correct: ");
     		System.out.println("vous voulez quitter? : (1/0)");
     		choix=in.nextInt();
@@ -48,12 +49,17 @@ public class PatientAction {
     		
     		error=true;
     	 }else{
-    		 PatientDaoImp patientdao=new PatientDaoImp();
+    		 List<Hospitalisation> listeHospitalisations=hospAction.queryById(numpatient);
     		
-    		 patientdao.queryById(numpatient);
-    		 long Sejour_Patient=hospAction.SejourPatient(patientHosp)/(24*60*60*1000);
-    		 System.out.println(patientdao.queryById(numpatient) + ", Séjours: "+Sejour_Patient);
+    		 for (Hospitalisation hosp: listeHospitalisations)
+	         {
+    			 System.out.println(hosp+"\n");
+	         }
+	    
+    		 System.out.println("");
+    		 System.out.println("\n nombre_séjour: " +listeHospitalisations.size());
     		 break;
+    		// System.out.println(patient+ ", Séjours: "+Sejour_Patient);
     	 		}
     		}catch(InputMismatchException e) {
     			System.out.println("Entrez un type de nombre: ");

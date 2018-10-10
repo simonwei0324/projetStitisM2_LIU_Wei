@@ -17,6 +17,8 @@ public class CCAM {
 	//ArrayList<Patient> listePatients = new ArrayList();
 	
 	//constructeur
+	
+	
 	/**
 	 * @param codeCCAM
 	 * @param libelleCCAM
@@ -27,6 +29,13 @@ public class CCAM {
 		CodeCCAM = codeCCAM;
 		LibelleCCAM = libelleCCAM;
 		this.listeActes = listeActes;
+	}
+
+	/**
+	 * 
+	 */
+	public CCAM() {
+		super();
 	}
 
 	/**
